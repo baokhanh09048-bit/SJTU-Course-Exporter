@@ -1,0 +1,60 @@
+# --- Real course data: never commit ---------------------------------------
+exports/
+course_export/
+local_samples/
+*.html
+!tests/fixtures/*.html
+manifest.json
+*.manifest.json
+!examples/manifest.example.json
+transcripts/
+subtitles/
+summaries/
+slides/
+full_course.md
+index.md
+ai_prompt.md
+
+# --- Downloaded platform assets / caches ----------------------------------
+chunks/
+*.js.下载
+*_files/
+cookie*.txt
+cookies*.txt
+*.har
+
+# --- Secrets --------------------------------------------------------------
+.env
+.env.*
+*.token
+*.jwt
+secrets*
+
+# --- Python ---------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# --- Editors / OS ---------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Node (userscript runtime tests) --------------------------------------
+node_modules/
+npm-debug.log*
+tests/userscript/.artifacts/
+

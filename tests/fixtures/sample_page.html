@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<!--
+  Anonymised structural fixture for SJTU Course Exporter tests.
+
+  Every class name, id and attribute layout below was copied from the real
+  saved page (structural sample). ALL text content is
+  invented. No real course material, teacher name, room, transcript line or
+  platform token appears in this file, by design.
+
+  Structure covered:
+    - course header (title / teacher / time range)
+    - session list with 2 sessions, one selected, AI flags
+    - transcript with 3 ASR cards
+    - platform AI summary: keywords, overview, 2 chapters
+    - PPT strip with 2 slide cards sharing one image (re-appearance case)
+    - a video element carrying a signed ?key= parameter (redaction test)
+-->
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><title>课堂实录</title></head>
+<body>
+<div id="app" data-v-app="">
+  <div class="layout-on-demand internal-webview">
+    <div class="all-in-one-play-link">
+      <header data-v-3ebb9634="">
+        <div class="header-left">
+          <div class="tecl-info">
+            <div class="top sle" title="示例课程">示例课程</div>
+            <div class="bottom">
+              <div class="sle" title="示例教师">示例教师</div>
+              <div class="time" title="2026-03-04 08:00~09:40">2026-03-04 08:00~09:40</div>
+            </div>
+          </div>
+        </div>
+        <div class="header-center"><div class="tab-wrapper">
+          <div class="tab-item">直播</div>
+          <div class="tab-item active">点播</div>
+        </div></div>
+      </header>
+
+      <main>
+        <div class="video-page-wrapper">
+          <div class="left-module-wrapper" id="playerModule">
+            <div class="ppt-horizontal-wrapper">
+              <div class="top-wrapper"><div class="left"><div class="title">PPT</div></div></div>
+              <div class="ppt-card-wrapper visible">
+                <div id="pptHorizontalWrapper" class="ppt-card-wrapper__inner">
+                  <div id="ppt-horizontal-0" class="ppt-card previous-active">
+                    <div class="image-wrapper">
+                      <div id="pptImageHorizontal-0" class="el-image">
+                        <img src="https://example.invalid/slides/sample-0001.jpg" class="el-image__inner">
+                      </div>
+                      <div class="time">00:10</div>
+                      <div class="image-bottom" title="示例关键词甲 示例关键词乙">
+                        <span class="keyword">示例关键词甲</span><span class="keyword">示例关键词乙</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="ppt-horizontal-1" class="ppt-card active">
+                    <div class="image-wrapper">
+                      <div id="pptImageHorizontal-1" class="el-image">
+                        <img src="https://example.invalid/slides/sample-0002.jpg" class="el-image__inner">
+                      </div>
+                      <div class="time">12:30</div>
+                      <div class="image-bottom" title="示例关键词丙">
+                        <span class="keyword">示例关键词丙</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="ppt-horizontal-2" class="ppt-card">
+                    <div class="image-wrapper">
+                      <div id="pptImageHorizontal-2" class="el-image">
+                        <img src="https://example.invalid/slides/sample-0001.jpg" class="el-image__inner">
+                      </div>
+                      <div class="time">30:00</div>
+                      <div class="image-bottom" title="示例关键词甲 示例关键词乙">
+                        <span class="keyword">示例关键词甲</span><span class="keyword">示例关键词乙</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="player-wrapper">
+              <video id="kmd-video-player" src="https://media.invalid/record/sample/20260304/080000.mp4?key=0123456789abcdef0123456789abcdef" crossorigin="anonymous"></video>
+            </div>
+          </div>
+
+          <div class="right-pane">
+            <div class="module-tab">
+              <div class="tab-item">节次</div>
+              <div class="tab-item">概要</div>
+              <div class="tab-item active">语音</div>
+              <div class="tab-item">互动</div>
+            </div>
+
+            <div class="module-info-wrapper">
+              <!-- 节次 -->
+              <div class="course-list-wrapper" style="display: none;">
+                <div class="top-wrapper">
+                  <div class="date-picker-wrapper"><input class="el-range-input" placeholder="开始时间"></div>
+                  <div class="sort-btn"> 排序 </div>
+                </div>
+                <div class="list-wrap" id="parentEle">
+                  <div class="list-item student selected" id="list-item-0">
+                    <div class="ai-flag">AI</div>
+                    <div class="list-index"><div class="index">01</div></div>
+                    <div class="list-item__right">
+                      <div class="list-item__right-top">
+                        <div class="title sle" title="第2周 - 周三 第1节">第2周 - 周三 第1节</div>
+                      </div>
+                      <div class="list-item__right-bottom">
+                        <div class="bottom-left sle" title="2026-03-04 08:00 示例楼101">2026-03-04 08:00 示例楼101</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="list-item student" id="list-item-1">
+                    <div class="ai-flag">AI</div>
+                    <div class="list-index"><div class="index">02</div></div>
+                    <div class="list-item__right">
+                      <div class="list-item__right-top">
+                        <div class="title sle" title="第2周 - 周三 第2节">第2周 - 周三 第2节</div>
+                      </div>
+                      <div class="list-item__right-bottom">
+                        <div class="bottom-left sle" title="2026-03-04 09:50 示例楼101">2026-03-04 09:50 示例楼101</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="end-tip">-已经到底了-</div>
+                </div>
+              </div>
+
+              <!-- 概要 -->
+              <div class="outline-wrapper" style="display: none;">
+                <div class="search-wrapper">
+                  <input class="el-input__inner" placeholder="请输入关键字">
+                  <button class="el-button el-button--primary export-btn"><span> 导出 </span></button>
+                </div>
+                <div class="content-wrapper">
+                  <div class="title">节次关键词</div>
+                  <div class="keyword-wrapper">
+                    <div class="keyword sle" title="示例关键词甲">示例关键词甲</div>
+                    <div class="keyword sle" title="示例关键词乙">示例关键词乙</div>
+                  </div>
+                  <div class="title">内容概要</div>
+                  <div class="summary-content">这是一段示例概要文本，用于验证解析器能够正确提取平台 AI 生成的内容概要。此文本为测试而虚构。</div>
+                  <div class="title">章节导航</div>
+                  <div class="chapter-navigation">
+                    <ul class="el-timeline">
+                      <li class="el-timeline-item">
+                        <div class="el-timeline-item__tail"></div>
+                        <div class="el-timeline-item__node el-timeline-item__node--normal is-hollow"></div>
+                        <div class="el-timeline-item__wrapper">
+                          <div class="el-timeline-item__content">
+                            <div class="skim-wrapper">
+                              <div class="skim-time"><span class="time">00:10</span></div>
+                              <div class="skim-card">
+                                <div class="skim-title">示例章节标题一</div>
+                                <div class="skim-content">示例章节摘要一，用于测试章节导航提取。</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                      <li class="el-timeline-item">
+                        <div class="el-timeline-item__tail"></div>
+                        <div class="el-timeline-item__node el-timeline-item__node--normal is-hollow"></div>
+                        <div class="el-timeline-item__wrapper">
+                          <div class="el-timeline-item__content">
+                            <div class="skim-wrapper">
+                              <div class="skim-time"><span class="time">12:30</span></div>
+                              <div class="skim-card">
+                                <div class="skim-title">示例章节标题二</div>
+                                <div class="skim-content">示例章节摘要二，用于测试章节导航提取。</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 语音 -->
+              <div class="ai-caption-wrapper">
+                <div class="search-wrapper"><input class="el-input__inner" placeholder="请输入关键字"></div>
+                <div class="tip-wrapper">
+                  <div class="line"></div>
+                  <div class="text">本字幕由 AI 生成，仅供参考</div>
+                  <div class="line"></div>
+                </div>
+                <div class="main-wrapper">
+                  <div class="caption-scroll-wrapper" id="cardWrapper">
+                    <div id="card0" class="caption-card">
+                      <span class="time-wrapper"><span class="time">00:05</span></span><span id="part0" class="caption-text">这是第一条示例转写，包含 &amp; 一个实体符号。</span>
+                    </div>
+                    <div id="card1" class="caption-card">
+                      <span class="time-wrapper"><span class="time">01:02</span></span><span id="part0" class="caption-text">这是第二条示例转写，，带有重复标点。</span>
+                    </div>
+                    <div id="card2" class="caption-card">
+                      <span class="time-wrapper"><span class="time">12:30</span></span><span id="part0" class="caption-text">这是第三条示例转写，用于测试 PPT 对齐。</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>
+</body>
+</html>

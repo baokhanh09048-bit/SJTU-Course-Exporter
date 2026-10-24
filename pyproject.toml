@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sjtu-course-exporter"
+version = "0.1.0"
+description = "Export SJTU classroom transcripts and slides into an AI-ready local course dataset."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "SJTU Course Exporter contributors" }]
+keywords = ["sjtu", "transcript", "asr", "course", "ai-ready", "notebooklm"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Intended Audience :: End Users/Desktop",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Education",
+  "Topic :: Text Processing :: Markup :: Markdown",
+]
+# Deliberately zero runtime dependencies: the offline parser is built on the
+# standard library so that a student only needs a Python interpreter.
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4"]
+
+[project.scripts]
+sjtu-course-exporter = "cli.main:main"
+
+[tool.setuptools]
+packages = ["cli", "adapters"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

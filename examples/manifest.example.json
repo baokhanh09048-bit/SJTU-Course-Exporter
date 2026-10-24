@@ -1,0 +1,203 @@
+{
+  "schema_version": 1,
+  "platform": "sjtu-classroom-replay",
+  "exporter": {
+    "name": "sjtu-course-exporter",
+    "version": "0.1.0"
+  },
+  "exported_at": "2026-03-04T12:00:00+00:00",
+  "source": {
+    "kind": "live_dom",
+    "name": "https://v.sjtu.edu.cn",
+    "capture_scope": "whole_course"
+  },
+  "course": {
+    "id": null,
+    "title": "示例课程",
+    "teacher": "示例教师"
+  },
+  "discovered_sessions": [
+    {
+      "id": "2026-03-04-第1节-示例楼101-aaaa1111",
+      "id_source": "synthetic",
+      "platform_id": null,
+      "order": 1,
+      "title": "第2周 - 周三 第1节",
+      "date": "2026-03-04",
+      "start_time": "08:00",
+      "week": 2,
+      "weekday": "周三",
+      "section": "第1节",
+      "section_number": 1,
+      "room": "示例楼101",
+      "has_platform_ai": true,
+      "is_current_in_snapshot": true
+    },
+    {
+      "id": "2026-03-04-第2节-示例楼101-bbbb2222",
+      "id_source": "synthetic",
+      "platform_id": null,
+      "order": 2,
+      "title": "第2周 - 周三 第2节",
+      "date": "2026-03-04",
+      "start_time": "09:50",
+      "week": 2,
+      "weekday": "周三",
+      "section": "第2节",
+      "section_number": 2,
+      "room": "示例楼101",
+      "has_platform_ai": true,
+      "is_current_in_snapshot": false
+    }
+  ],
+  "discovered_session_count": 2,
+  "documents": [
+    {
+      "kind": "transcript",
+      "entries": 3,
+      "first_time": "00:05",
+      "last_time": "12:30"
+    },
+    {
+      "kind": "summary",
+      "present": true
+    },
+    {
+      "kind": "slides",
+      "entries": 3
+    }
+  ],
+  "extraction": {
+    "method": "dom",
+    "notes": "Example file. All content is invented and anonymised; no real course material is present."
+  },
+  "warnings": [],
+  "sessions": [
+    {
+      "id": "2026-03-04-第1节-示例楼101-aaaa1111",
+      "id_source": "synthetic",
+      "platform_id": null,
+      "order": 1,
+      "title": "第2周 - 周三 第1节",
+      "date": "2026-03-04",
+      "start_time": "08:00",
+      "week": 2,
+      "weekday": "周三",
+      "section": "第1节",
+      "section_number": 1,
+      "room": "示例楼101",
+      "has_platform_ai": true,
+      "is_current_in_snapshot": true,
+      "transcript": [
+        {
+          "index": 0,
+          "time": "00:05",
+          "seconds": 5,
+          "raw_text": "这是第一条示例转写，，带有重复标点。",
+          "normalized_text": "这是第一条示例转写，带有重复标点。",
+          "source": "platform_asr"
+        },
+        {
+          "index": 1,
+          "time": "01:02",
+          "seconds": 62,
+          "raw_text": "这是第二条示例转写，用于验证时间轴。",
+          "normalized_text": "这是第二条示例转写，用于验证时间轴。",
+          "source": "platform_asr"
+        },
+        {
+          "index": 2,
+          "time": "12:30",
+          "seconds": 750,
+          "raw_text": "这是第三条示例转写，用于验证 PPT 对齐。",
+          "normalized_text": "这是第三条示例转写，用于验证 PPT 对齐。",
+          "source": "platform_asr"
+        }
+      ],
+      "summary": {
+        "generated_by_platform_ai": true,
+        "disclaimer": "SJTU 平台 AI 自动生成内容，非教师原话。Platform AI generated; not the teacher's words.",
+        "keywords": [
+          "示例关键词甲",
+          "示例关键词乙"
+        ],
+        "overview": "这是一段示例概要文本，用于演示 manifest 结构。所有文字均为虚构。",
+        "chapters": [
+          {
+            "index": 1,
+            "time": "00:10",
+            "seconds": 10,
+            "title": "示例章节标题一",
+            "summary": "示例章节摘要一。",
+            "end_seconds": 750,
+            "time_range": "00:10-12:30"
+          },
+          {
+            "index": 2,
+            "time": "12:30",
+            "seconds": 750,
+            "title": "示例章节标题二",
+            "summary": "示例章节摘要二。",
+            "end_seconds": null,
+            "time_range": null,
+            "end_boundary": "end_of_session"
+          }
+        ]
+      },
+      "slides": [
+        {
+          "index": 1,
+          "time": "00:10",
+          "seconds": 10,
+          "url": "https://example.invalid/slides/sample-0001.jpg",
+          "local_path": null,
+          "title": null,
+          "keywords": [
+            "示例关键词甲"
+          ],
+          "caption_label": "示例关键词甲",
+          "is_current": false,
+          "source": "page_snapshot"
+        },
+        {
+          "index": 2,
+          "time": "12:30",
+          "seconds": 750,
+          "url": "https://example.invalid/slides/sample-0002.jpg",
+          "local_path": null,
+          "title": null,
+          "keywords": [
+            "示例关键词乙"
+          ],
+          "caption_label": "示例关键词乙",
+          "is_current": true,
+          "source": "page_snapshot"
+        },
+        {
+          "index": 3,
+          "time": "30:00",
+          "seconds": 1800,
+          "url": "https://example.invalid/slides/sample-0001.jpg",
+          "local_path": null,
+          "title": null,
+          "keywords": [
+            "示例关键词甲"
+          ],
+          "caption_label": "示例关键词甲",
+          "is_current": false,
+          "source": "page_snapshot"
+        }
+      ],
+      "video": {
+        "download_implemented": false,
+        "note": "Video download is intentionally not implemented. This phase extracts transcripts, summaries and slides only.",
+        "url": "https://media.invalid/record/sample/20260304/080000.mp4?key=REDACTED&redacted=1",
+        "url_had_signature": true,
+        "poster": null
+      },
+      "notices": [
+        "本字幕由 AI 生成，仅供参考"
+      ]
+    }
+  ]
+}
