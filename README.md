@@ -391,8 +391,7 @@ _说明：平台只提供每张 PPT 的出现时间，段落结束时间由下�
 - **只导出你保存/打开的那一节（离线模式）。** 一份保存的 HTML 只有一个课次的转写内容。
   整门课程需要 userscript 逐课次点击切换。
 - **不下载视频。** 视频字段只记录「存在」，并抹掉签名。
-- **PPT 是采样帧，不是原始课件。** 平台把 PPT 渲染成 JPEG 采样帧（见
-  `docs/reverse-engineering-notes.md` §7）。更高保真的原始 `.pptx`/`.pdf`
+- **PPT 是采样帧，不是原始课件。** 平台把 PPT 渲染成 JPEG 采样帧。更高保真的原始 `.pptx`/`.pdf`
   需要走另外的接口，目前**尚未在线验证**。
 - **平台 AI 概要是二次加工。** 它可能出错，且**不是**教师原话。
 - **章节/PPT 的结束时间是推断值。** 平台只给开始时间。
@@ -411,112 +410,47 @@ _说明：平台只提供每张 PPT 的出现时间，段落结束时间由下�
 ## Development
 
 ```bash
-# 安装开发依赖
 pip install -e ".[dev]"
-
-# Python 端：260 个用例
-python -m pytest -q
-
-# Userscript 端：91 项检查（必需，别跳过）
-cd tests/userscript && npm install && node run.js
-
-# 用真实的保存页面做验证（把 HTML 放到 local_samples/，该目录已被 gitignore）
-python -m pytest tests/test_adapter.py::TestRealSample -v
-python -m cli.main inspect "local_samples/课堂实录.html"
+npm ci --prefix tests/userscript
+python -m pytest
 ```
 
-`python -m pytest` 会自动带上 userscript 运行时测试；没有 Node 或 jsdom 时会跳过。
+也可以单独执行浏览器模拟检查：
 
-### 为什么 userscript 必须在真实 DOM 里跑
+```bash
+node tests/userscript/run.js
+```
 
-`node --check` 只能查语法，查不出运行时行为。这个项目**曾经因此发布过一个会让页面
-完全卡死的版本**：面板的 `refresh()` 写入 DOM，而 `MutationObserver` 监听
-`document.documentElement` 并在回调里再次调用 `refresh()` —— 无限微任务循环，
-页面再也不把控制权交还给事件循环。因为 `@match` 覆盖整个站点，连课程列表和登录页
-都一起卡死，**用户根本进不去播放页**。
+2026-10-24 的公开源码验证：**258 项通过、2 项跳过**。跳过项依赖未公开的私人保存页面。Python 套件会调用 JavaScript 检查，并独立验证导出 ZIP 的内容与 CRC；这些数量存在包含关系，不能重复相加。Node.js 与 jsdom 不可用时，浏览器模拟检查会跳过。
 
-`tests/userscript/harness.js` 用 jsdom 加载**真实的** userscript，配合匿名化 fixture
-和 Tampermonkey API stub 执行它。卡死被检测为进程超时（卡死的页面永远不会 yield）。
-它还断言导出的 manifest 内容正确、签名 URL 已脱敏、以及**课次切换失败会被如实上报
-而不是静默错配**。
+测试以匿名化结构 fixture、虚构课程文本和 `.invalid` 图片地址运行。源码开源不附带真实课程资料，也没有在这次发布中重新登录平台验证当前线上页面。
 
-`tests/test_userscript_runtime.py` 里有一个自检用例：喂给 harness 一个故意死循环的脚本，
-确认它真的能发现——防止这套检测机制本身失效。
+### 浏览器运行时验证
 
-**由此得到的设计规则：永远不要 `observe` 自己会写入的子树。**
+`tests/userscript/harness.js` 在 jsdom 中加载实际 userscript，模拟 Tampermonkey、文件夹保存、ZIP、课次切换及失败。每个进程有超时保护，测试会检查页面卡死、缺图、保存失败及错配课次。
 
-### 测试分层
+面板写入的 DOM 必须排除在对应 MutationObserver 的监听范围之外，否则可能形成无限更新循环。套件还用故意死循环的脚本验证超时检测是否有效。
 
-| 层 | 数量 | 覆盖什么 |
-| --- | --- | --- |
-| `tests/test_{adapter,html_parser,manifest,packer,ppt,transcript}.py` | 219 | DOM 解析、adapter、manifest、PPT 对齐、打包、CLI（**与本轮改动前完全一致**） |
-| `tests/test_userscript_core_frozen.py` | 17 | 用 SHA-1 钉住 userscript 的采集核心，防止误改 |
-| `tests/userscript/unit.js` | 42 | 纯函数：内容筛选、路径规划、ZIP 写入、Markdown 渲染 |
-| `tests/userscript/run.js`（DOM 用例） | 49 | 真实 jsdom 执行：UI 结构、进度区、两种保存方式、批量导出 |
-| `tests/test_userscript_runtime.py` | 24 | 驱动上面两套，并用 Python `zipfile` **独立校验**产出的 ZIP |
-
-ZIP 是**手写**的（无第三方依赖），所以用 CPython 的 `zipfile` 重新打开并校验每个
-CRC32 —— 两个独立实现互相印证，而不是自己证明自己。
+`tests/test_userscript_core_frozen.py` 固定 section 0–5 的采集逻辑校验值，忽略元数据头和正文两处版本号。公开准备时已将旧提交与当前采集核心规范化比较，确认提取逻辑一致。交互和输出代码通过单独测试覆盖。
 
 ### 项目结构
 
-```
-SJTU-Course-Exporter/
-├─ userscript/sjtu-course-exporter.user.js   # 浏览器端：采集 + UI + 保存
-├─ adapters/
-│  ├─ dom.py          # 零依赖 HTML DOM + CSS 选择器子集
-│  ├─ selectors.py    # ★ 所有选择器与接口路径的唯一来源
-│  ├─ textutil.py     # 时间戳、保守 normalization
-│  └─ sjtu_replay.py  # SJTUReplayAdapter：页面 → 数据模型
-├─ cli/
-│  ├─ main.py         # argparse CLI
-│  ├─ manifest.py     # schema / 校验 / 敏感信息关卡
-│  ├─ transcript.py   # SRT
-│  ├─ ppt.py          # PPT × 语音对齐
-│  └─ packer.py       # Markdown / index / prompt / 输出目录
-├─ docs/
-│  ├─ architecture.md
-│  └─ reverse-engineering-notes.md   # ★ 真实逆向记录（14 节）
-├─ examples/manifest.example.json    # 匿名化示例
-├─ tools/fetch_platform_bundles.py   # 可复现的 bundle 分析工具
-└─ tests/
-   ├─ test_*.py                      # 260 个 Python 用例
-   ├─ fixtures/sample_page.html      # 匿名化结构 fixture
-   └─ userscript/
-      ├─ unit.js                     # 纯函数单测（内容筛选 / 路径 / ZIP）
-      ├─ harness.js                  # 在 jsdom 里真实执行 userscript
-      └─ run.js                      # 驱动所有用例并输出 91 项检查
+```text
+userscript/   浏览器采集、界面、目录保存及 ZIP
+adapters/     离线 DOM 解析、选择器和页面数据模型
+cli/          manifest 校验、Markdown、字幕及资料包
+examples/     虚构课程 manifest
+tests/        Python 检查、匿名 HTML fixture 和 jsdom harness
+tools/        公开平台 bundle 的辅助分析脚本
 ```
 
-### userscript 的分层
+浏览器采集仍使用 DOM。`adapters/selectors.py` 中的内部接口目录只是历史 bundle 线索，不能视为已确认的在线请求契约。当前平台若改变结构，需要同时核对 Python 选择器与 userscript 的选择器。
 
-采集核心（section 0–5）与交互层是分开的，重构 UI 时**没有改动任何提取逻辑**：
+### 贡献
 
-| section | 内容 | 本轮是否改动 |
-| --- | --- | --- |
-| 0–5 | 选择器、工具、metadata 解析、**提取器**、等待策略 | ❌ 逐字节保留 |
-| 6 | 输出规划（内容筛选 + 路径规划，纯函数） | ✅ 新增 |
-| 7 | ZIP 写入器（手写，无依赖） | ✅ 新增 |
-| 8 | Markdown / SRT 渲染（支持内容开关） | ✅ 改造 |
-| 9 | 保存：File System Access API + IndexedDB + ZIP 回退 | ✅ 新增 |
-| 10–11 | 设置 / 状态 / 面板 UI | ✅ 重写 |
-| 12 | 编排：范围选择、抓取循环、保存 | ✅ 改造（复用 `captureOne`） |
-| 13–14 | Boot / 测试接缝 | ✅ 保持 + 测试接缝 |
+欢迎提交选择器兼容性、导出可靠性和测试改进。问题报告优先附匿名化的小型复现、浏览器版本和明确错误信息；请去掉真实转写、图片、课程个人信息、签名参数和登录凭证。
 
-`tests/test_userscript_core_frozen.py` 用 SHA-1 钉住 section 0–5，任何误改都会让测试失败。
-
-设计要点、分层原因与扩展方式见 [`docs/architecture.md`](docs/architecture.md)。
-页面结构、接口线索与「哪些还没验证」见
-[`docs/reverse-engineering-notes.md`](docs/reverse-engineering-notes.md)。
-
-### 想帮忙？
-
-最有价值的贡献是**在线验证内部接口**。请打开课程播放页 →
-DevTools → Network → Fetch/XHR，然后按
-[`docs/reverse-engineering-notes.md`](docs/reverse-engineering-notes.md) §14
-的清单记录请求。**这一条能把整个工具从「点页面」升级成「调接口」。**
-
----
+私人的页面分析笔记没有随仓库公开，源码范围见 [PUBLIC_SOURCE.md](PUBLIC_SOURCE.md)。
 
 ## License
 
